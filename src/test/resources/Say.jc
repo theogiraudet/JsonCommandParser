@@ -1,0 +1,20 @@
+{
+    "say": {
+        "description": "Make the bot say something.",
+        "permissions": [],
+        "arguments": [
+            {
+                "type": "string...",
+                "tag": "words",
+                "keep_value": true,
+                "arguments": [
+                    {
+                        "type":"integer",
+                        "tag": "test",
+                        "execute": "says"
+                    }
+                ]
+            }
+        ]
+    }
+}
