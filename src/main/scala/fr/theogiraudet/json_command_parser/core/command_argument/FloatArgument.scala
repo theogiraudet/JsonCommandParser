@@ -15,7 +15,7 @@ class FloatArgument extends Argument {
     */
   override protected[command_argument] def parse(input: String): (Option[AnyRef], String) = {
     val (word, queue) = readWord(input)
-    (word.toFloatOption.map(_.asInstanceOf[AnyRef]), queue)
+    (word.toFloatOption.filter(int => int >= min && int <= max).map(_.asInstanceOf[AnyRef]), queue)
   }
 
   /**

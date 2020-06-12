@@ -35,4 +35,15 @@ object CommandExecutor {
     }
   }
 
+  /**
+    * @param text une chaîne de caractères
+    * @return la sous-chaîne correspondant à la commande si <i>text</i> était préfixé par le préfixe de commande, None sinon.
+    */
+  def isCommand(text: String): Option[String] = {
+    if(text.startsWith(Configuration.getPrefix))
+      Some(text.substring(Configuration.getPrefix.size))
+    else
+      None
+  }
+
 }

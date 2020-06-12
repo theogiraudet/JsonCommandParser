@@ -15,7 +15,7 @@ class IntArgument extends Argument {
     */
   override protected[command_argument] def parse(input: String): (Option[AnyRef], String) = {
     val (word, queue) = readWord(input)
-    (word.toIntOption.map(_.asInstanceOf[AnyRef]), queue)
+    (word.toIntOption.filter(int => int >= min && int <= max).map(_.asInstanceOf[AnyRef]), queue)
   }
 
   /**

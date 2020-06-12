@@ -6,6 +6,7 @@ import org.antlr.v4.runtime.{CharStreams, CommonTokenStream, RecognitionExceptio
 
 import scala.reflect.runtime.{currentMirror, universe}
 import fr.theogiraudet.json_command_parser.Configuration._
+import fr.theogiraudet.json_command_parser.core.exception.ParseException
 import fr.theogiraudet.json_command_parser.core.{Actions, JsonCommandSyntaxLexer, JsonCommandSyntaxParser}
 import org.reflections.Reflections
 
@@ -33,18 +34,18 @@ object CommandParser {
       } catch {
         case fnc: FileNotFoundException => System.err.println(fnc)
         case re: RecognitionException => System.err.println(re)
+        case pe: ParseException => System.err.println(pe)
       }
     } else
         if(getDebug) println(s"${command.getClass.getSimpleName} -> Ignored")
   }
 
   /**
-    * Appelle la fonction {@link fr.theogiraudet.json_command_parser.CommandParser#parseCommand parseCommand} sur toutes les classes du packag pointé par <i>packag</i> si celles-ci héritent de {@link fr.theogiraudet.json_command_parser.Command Command}.
+    * Appelle la fonction {@link fr.theogiraudet.json_command_parser.CommandParser#parseCommand parseCommand} sur toutes les classes du package pointé par <i>packag</i> si celles-ci héritent de {@link fr.theogiraudet.json_command_parser.Command Command}.
     * @param packag un package
     */
   def parseCommands(packag: String): Unit = {
     val reflections: Reflections = new Reflections(packag)
     reflections.getSubTypesOf(classOf[Command]).forEach((c: Class[_ <: Command]) => parseCommand(c.newInstance))
   }
-
 }

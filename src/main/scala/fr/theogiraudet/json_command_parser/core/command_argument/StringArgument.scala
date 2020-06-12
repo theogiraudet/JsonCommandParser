@@ -53,7 +53,7 @@ class StringArgument extends Argument {
   /**
     * @return un message d'échec de parse
     */
-  override protected def getFailureMessage: String = s"'$tag': expected string " + getFailureMessage
+  override protected def getFailureMessage: String = s"'$tag': expected string " + matchingToString
 
   /**
     * @return la conversion du matching en String

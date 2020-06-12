@@ -9,6 +9,6 @@ class ParseException(message: Int => String, line: Int = UtilLex.lineNumber) ext
 
   override def fillInStackTrace(): Throwable = this
 
-  override def toString = ": " + message.apply(line)
+  override def toString = "ParseException: " + message.apply(line)
 
 }

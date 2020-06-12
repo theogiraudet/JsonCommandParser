@@ -4,19 +4,27 @@ import fr.theogiraudet.json_command_parser.Command
 import fr.theogiraudet.json_command_parser.core.command_argument._
 import fr.theogiraudet.json_command_parser.core.exception.ParseException
 
+import scala.collection.mutable
+import scala.util.Try
+
 object Actions {
 
   var command: Command = _
   var list: List[String] = _
+  val idMap = mutable.Map[String, Argument]()
+  val referenceSet = mutable.Set[(ReferenceArgument, String, Int)]()
 
   def initCommand: Unit = {
     command.name = UtilLex.string
-    command.register
+    idMap.clear
+    referenceSet.clear
   }
 
   def resultCommand: Unit = {
     command.syntax = new RootArgument().initializeWith(command.syntax)
     command.syntax.defineMatches(command.name)
+    resolveReference
+    command.register
   }
 
   def setDescription: Unit = {
@@ -45,6 +53,7 @@ object Actions {
 
   def setId: Unit = {
     ParserStack.addElement("id")
+    idMap += (UtilLex.string -> ParserStack.getArgument)
     ParserStack.getArgument.id = UtilLex.string
   }
 
@@ -77,6 +86,7 @@ object Actions {
       case "integer" => new IntArgument
       case "float" => new FloatArgument
       case "boolean" => new BooleanArgument
+      case "reference" => new ReferenceArgument
       case _ => getComplexType(typeLitteral)
     }
   }
@@ -152,6 +162,16 @@ object Actions {
       val trace = requires.map(pair => s"'${pair._1}' is requires this key(s) in the same context : " + pair._2.map(s => s"'$s'").mkString(", ")).mkString("\n") + ".\n"
       throw new ParseException(line => trace + "In local context at line " + line, ParserStack.getLine)
     }
+  }
+
+  private def resolveReference = {
+    referenceSet.foreach(elem => resolveArgument(elem))
+  }
+
+  private def resolveArgument(info: (ReferenceArgument, String, Int)) = {
+    val link = idMap.get(info._2).map(arg => info._1.refereTo = arg)
+    if(link.isEmpty)
+      throw new ParseException(_ => s"ID '${info._2}' is not defined.\nIn local context at line ${info._3}")
   }
 
   def initList: Unit = list = List[String]()
