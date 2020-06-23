@@ -5,12 +5,13 @@ import java.util.List
 
 
 sealed trait ExecutionResult {
-  def isSuccess: Boolean = this.isInstanceOf[Success]
+  def isSuccess: Boolean = this.isInstanceOf[Success] || this.isInstanceOf[SuccessPipe]
   def isFailure: Boolean = !isSuccess
 
 }
 
 case class Success(parameters: List[AnyRef], method: Method) extends ExecutionResult
+case class SuccessPipe(parameters: List[AnyRef], method: Method, queue: String) extends ExecutionResult
 case class Failure(location: String, cause: Cause, expectedArguments: List[String]) extends ExecutionResult
 
 sealed trait Cause

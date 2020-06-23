@@ -2,6 +2,8 @@ package fr.theogiraudet.json_command_parser.core.command_argument
 
 import fr.theogiraudet.json_command_parser.core.exception.ParseException
 
+import scala.util.Try
+
 class FloatArgument extends Argument {
 
   override protected[json_command_parser] val ID: String = "float"
@@ -15,7 +17,15 @@ class FloatArgument extends Argument {
     */
   override protected[command_argument] def parse(input: String): (Option[AnyRef], String) = {
     val (word, queue) = readWord(input)
-    (word.toFloatOption.filter(int => int >= min && int <= max).map(_.asInstanceOf[AnyRef]), queue)
+    (word.toFloatOption.filter(float => float >= min && float <= max).map(_.asInstanceOf[AnyRef]), queue)
+  }
+
+  /**
+    * @param input la valeur à tester
+    * @return vrai si la valeur est valide selon l'argument, faux sinon
+    */
+  override protected[command_argument] def isValidInput(input: AnyRef): Boolean = {
+    Try(input.asInstanceOf[Float]).filter(float => float >= min && float <= max).isSuccess
   }
 
   /**
@@ -59,4 +69,5 @@ class FloatArgument extends Argument {
     * @return la conversion du matching en String
     */
   override protected[json_command_parser] def matchingToString: String = s"between $min and $max"
+
 }

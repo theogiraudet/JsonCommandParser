@@ -4,6 +4,8 @@ import java.util.regex.PatternSyntaxException
 
 import fr.theogiraudet.json_command_parser.core.exception.ParseException
 
+import scala.util.Try
+
 class StringArgument extends Argument {
 
   override protected[json_command_parser] val ID: String = "string"
@@ -37,6 +39,14 @@ class StringArgument extends Argument {
     * @return si <i>string</i> correponds au pattern <regex>
     */
   private def checkString(string: String): Boolean = regex.matches(string)
+
+  /**
+    * @param input la valeur à tester
+    * @return vrai si la valeur est valide selon l'argument, faux sinon
+    */
+  override protected[command_argument] def isValidInput(input: AnyRef): Boolean = {
+    Try(input.asInstanceOf[String]).filter(checkString(_)).isSuccess
+  }
 
   /**
     * Défini les restrictions sur le paramètre lu par l'exécuteur de commande

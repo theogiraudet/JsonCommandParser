@@ -2,6 +2,8 @@ package fr.theogiraudet.json_command_parser.core.command_argument
 
 import fr.theogiraudet.json_command_parser.core.exception.ParseException
 
+import scala.util.Try
+
 class IntArgument extends Argument {
 
   override protected[json_command_parser] val ID: String = "integer"
@@ -16,6 +18,14 @@ class IntArgument extends Argument {
   override protected[command_argument] def parse(input: String): (Option[AnyRef], String) = {
     val (word, queue) = readWord(input)
     (word.toIntOption.filter(int => int >= min && int <= max).map(_.asInstanceOf[AnyRef]), queue)
+  }
+
+  /**
+    * @param input la valeur à tester
+    * @return vrai si la valeur est valide selon l'argument, faux sinon
+    */
+  override protected[command_argument] def isValidInput(input: AnyRef): Boolean = {
+    Try(input.asInstanceOf[Int]).filter(int => int >= min && int <= max).isSuccess
   }
 
   /**

@@ -2,6 +2,8 @@ package fr.theogiraudet.json_command_parser.core.command_argument
 
 import fr.theogiraudet.json_command_parser.core.{Actions, ParserStack}
 
+import scala.util.Try
+
 class ReferenceArgument extends Argument {
 
   override protected[json_command_parser] val ID: String = "reference"
@@ -13,6 +15,12 @@ class ReferenceArgument extends Argument {
     * @return un doublet tel que le premier élément est la valeur parsée si elle existe (sinon None) et le deuxième est le reste de la chaîne à faire traiter
     */
   override protected[command_argument] def parse(input: String): (Option[AnyRef], String) = refereTo.parse(input)
+
+  /**
+    * @param input la valeur à tester
+    * @return vrai si la valeur est valide selon l'argument, faux sinon
+    */
+  override protected[command_argument] def isValidInput(input: AnyRef): Boolean = refereTo.isValidInput(input)
 
   /**
     * @return un message d'échec de parse

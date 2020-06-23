@@ -4,16 +4,11 @@
         "permissions": [],
         "arguments": [
             {
-                "type": "string...",
+                "type": "integer",
                 "tag": "words",
-                "keep_value": true,
-                "arguments": [
-                    {
-                        "type":"integer",
-                        "tag": "test",
-                        "execute": "says"
-                    }
-                ]
+                "matches": "0..6",
+                "execute": "says",
+                "keep_value": true
             }
         ]
     }

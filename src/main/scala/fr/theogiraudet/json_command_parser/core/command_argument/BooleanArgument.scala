@@ -14,6 +14,12 @@ class BooleanArgument extends Argument {
   }
 
   /**
+    * @param input la valeur à tester
+    * @return vrai si la valeur est valide selon l'argument, faux sinon
+    */
+  override protected[command_argument] def isValidInput(input: AnyRef): Boolean = input.isInstanceOf[Boolean]
+
+  /**
     * @return un message d'échec de parse
     */
   override protected def getFailureMessage: String = s"'$tag': expected 'true' or 'false'"
@@ -33,4 +39,5 @@ class BooleanArgument extends Argument {
     * @return la conversion du matching en String
     */
   override protected[json_command_parser] def matchingToString: String = ""
+
 }

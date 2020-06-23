@@ -2,6 +2,7 @@ package fr.theogiraudet.json_command_parser.core.command_argument
 
 import scala.collection.mutable.ListBuffer
 import scala.jdk.CollectionConverters._
+import scala.util.Try
 
 class VaragsArgument(private val pattern: Argument) extends Argument {
 
@@ -21,6 +22,14 @@ class VaragsArgument(private val pattern: Argument) extends Argument {
       }
     }
     (Some(list.asJava), "")
+  }
+
+  /**
+    * @param input la valeur à tester
+    * @return vrai si la valeur est valide selon l'argument, faux sinon
+    */
+  override protected[command_argument] def isValidInput(input: AnyRef): Boolean = {
+    Try(input.asInstanceOf[java.util.List[AnyRef]]).filter(list => list.stream.allMatch(elem => pattern.isValidInput(elem))).isSuccess
   }
 
   /**
